@@ -1,0 +1,29 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: nginx-external
+spec:
+  hosts:
+  - nginx.icloud2native.com
+  gateways:
+  - istio-system/egress   # 规则应用于egressgateway的sidercar
+  - mesh                  # 规则适用于网格内的sideercar
+  http:
+  - match:
+    - gateways:           # 网格内的app经过sidercar路由到egressgateway的pod上
+      - mesh
+    route:
+    - destination:
+        host: istio-egressgateway.istio-system.svc.cluster.local
+  - match:
+    - gateways:
+      - istio-system/egress   # 流量到达egressgateway后，经由egressgateway路由到serviceentry的集群
+    route:
+    - destination:
+        host: nginx.icloud2native.com
+        subset: v21
+      weight: 5
+    - destination:
+        host: nginx.icloud2native.com
+        subset: v20
+      weight: 95

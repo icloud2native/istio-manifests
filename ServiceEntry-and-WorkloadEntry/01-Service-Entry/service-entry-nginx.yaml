@@ -1,0 +1,27 @@
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: nginx-external
+spec:
+  hosts:
+  - nginx.icloud2native.com
+  addresses:
+  - "192.168.170.100"  # 下面这些ip和endpoint下面的ip可以不一样，这个实际场景应该是一个VIP
+  - "192.168.170.101"
+  - "192.168.170.102"
+  ports:
+  - number: 8091
+    name: http
+    protocol: HTTP
+  location: MESH_EXTERNAL
+  resolution: STATIC   # 解析为静态指定，需要在下面指定endpoints
+  endpoints:
+  - address: "192.168.170.100"
+    ports:
+      http: 8091    # 如果这个端口和spec.ports.number是一样的话此处可以省略
+  - address: "192.168.170.101"
+    ports:
+      http: 8091   # 这里的http是spec.ports.name的值，ports处可以定义多个端口，每个端口都有自己的名称
+  - address: "192.168.170.102"
+    ports:
+      http: 8091

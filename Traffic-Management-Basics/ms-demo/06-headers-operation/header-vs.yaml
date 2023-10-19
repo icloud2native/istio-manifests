@@ -1,0 +1,38 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: demoapp
+spec:
+  hosts:
+  - demoapp
+  http:
+  - name: canary
+    match:
+    - headers:
+        x-canary:
+          exact: "true"
+    route:
+    - destination:
+        host: demoapp
+        subset: v11
+      headers:
+        request:
+          set: 
+            User-Agent: Chrome   #set字段修改request的value的值
+        response:
+          add:
+            x-canary: "true"  # 在reponse中利用add字段进行添加
+  - name: default
+    headers:
+      response:
+        add:
+          X-Envoy: test
+    route:
+    - destination:
+        host: demoapp
+        subset: v10
+
+
+
+
+

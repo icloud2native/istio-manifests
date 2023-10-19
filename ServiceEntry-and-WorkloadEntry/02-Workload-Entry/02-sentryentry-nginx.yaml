@@ -1,0 +1,17 @@
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: nginx-external
+spec:
+  hosts:
+  - nginx.icloud2native.com # 服务内访问的域名
+  ports:
+  - number: 80  # 服务内访问的端口
+    name: http
+    protocol: HTTP
+    targetPort: 8091 # 关联的后端endpoint
+  location: MESH_EXTERNAL
+  resolution: STATIC
+  workloadSelector:
+    labels:
+      app: nginx # slector workload entry

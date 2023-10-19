@@ -1,0 +1,33 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: demoapp
+spec:
+  hosts:
+  - demoapp
+  http:
+  - name: canary
+    match:
+    - uri:
+        prefix: /canary
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: demoapp
+        subset: v11
+    fault:         # 故障注入的一种方式abort,会在发往v11版本的20%的流量上注入abort故障，返回的http code为555
+      abort:
+        percentage:
+          value: 20
+        httpStatus: 555
+  - name: default
+    route:
+    - destination:
+        host: demoapp
+        subset: v10
+    fault:
+      delay:              # 故障注入的另外一种方式延迟，会在发往v10的版本上20%的流量上注入delay故障，延迟时间为3秒
+        percentage:
+          value: 20
+        fixedDelay: 3s

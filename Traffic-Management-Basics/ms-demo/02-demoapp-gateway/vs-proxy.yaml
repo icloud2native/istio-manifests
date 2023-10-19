@@ -1,0 +1,14 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: proxy
+spec:
+  gateways:
+  - istio-system/proxy-gateway
+  hosts:
+  - "fe.icloud2native.com"
+  http:
+  - name: default
+    route:
+    - destination:
+        host: proxy

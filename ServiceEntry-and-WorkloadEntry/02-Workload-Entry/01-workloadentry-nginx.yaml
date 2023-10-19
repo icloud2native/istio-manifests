@@ -1,0 +1,30 @@
+apiVersion: networking.istio.io/v1beta1
+kind: WorkloadEntry
+metadata:
+  name: workload-nginx2001
+  labels:
+    version: v1.20
+spec:
+  address: "192.168.170.100" # 外部服务的IP地址
+  ports:
+    http: 8091
+  labels:
+    app: nginx  # 用于workloadSelector来选择的标签
+    version: v1.20 # 版本号，用于灰度发布流量分配
+    instance-id: Nginx2001
+---
+apiVersion: networking.istio.io/v1beta1
+kind: WorkloadEntry
+metadata:
+  name: workload-nginx2002
+  labels:
+    version: v1.20
+spec:
+  address: "192.168.170.101"
+  ports:
+    http: 8091
+  labels:
+    app: nginx
+    version: v1.20
+    instance-id: Nginx2002
+---

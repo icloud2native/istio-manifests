@@ -1,0 +1,39 @@
+apiVersion: networking.istio.io/v1beta1
+kind: WorkloadEntry
+metadata:
+  name: workload-nginx2001
+spec:
+  address: "192.168.170.100"
+  ports:
+    http: 8091
+  labels:
+    app: nginx
+    version: "v1.20"
+    instance-id: Nginx2001
+---
+apiVersion: networking.istio.io/v1beta1
+kind: WorkloadEntry
+metadata:
+  name: workload-nginx2002
+spec:
+  address: "192.168.170.101"
+  ports:
+    http: 8091
+  labels:
+    app: nginx
+    version: "v1.20"
+    instance-id: Nginx2002
+---
+apiVersion: networking.istio.io/v1beta1
+kind: WorkloadEntry
+metadata:
+  name: workload-nginx2101
+spec:
+  address: "192.168.170.102"
+  ports:
+    http: 8091
+  labels:
+    app: nginx
+    version: "v1.21"
+    instance-id: Nginx2101
+---

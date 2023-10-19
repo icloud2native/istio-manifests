@@ -1,0 +1,20 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: proxy
+spec:
+  hosts:
+  - proxy
+  http:
+  - name: redict
+    match:
+    - uri:
+        prefix: "/backend"
+    redirect:
+      uri: /   # 覆盖match中的urri
+      authority: backend # 覆盖请求的url的主机
+      port: 8082 #覆盖请求的url的端口
+  - name: default
+    route:
+    - destination:
+        host: proxy

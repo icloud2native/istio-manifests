@@ -1,0 +1,32 @@
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: demoapp
+spec:
+  host: demoapp
+  trafficPolicy:
+    loadBalancer:
+      simple: RANDOM
+    connectionPool:
+      tcp:
+        maxConnections: 100
+        connectTimeout: 30ms
+        tcpKeepalive:
+          time: 7200s
+          interval: 75s
+      http:
+        http2MaxRequests: 1000
+        maxRequestsPerConnection: 10
+    outlierDetection:                # 异常值检测配置
+      maxEjectionPercent: 50         # 可被驱逐的最大比例，默认为10%
+      consecutive5xxErrors: 5        # 被驱逐前5**连续错误的和
+      interval: 10s                  # 驱逐的时间间隔，默认值为10s
+      baseEjectionTime: 1m           # 基准驱逐时长，具体时长取决于退避算法
+      minHealthPercent: 10           # 低于该比例时，Outlier Detection将被禁用
+  subsets:
+  - name: v10
+    labels:
+      version: v1.0
+  - name: v11
+    labels:
+      version: v1.1
